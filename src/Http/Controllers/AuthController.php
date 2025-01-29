@@ -12,7 +12,7 @@ class AuthController extends Controller
 {
     public function showLoginForm()
     {
-        return view('laravel-login::login');
+        return view('laravel-sso-login::login');
     }
 
     public function login(Request $request)
@@ -22,7 +22,7 @@ class AuthController extends Controller
         try {
             // Call SSO API
             $client = new Client();
-            $response = $client->post(config('laravel-login.sso_login_url'), [
+            $response = $client->post(config('laravel-sso-login.sso_login_url'), [
                 'json' => $credentials,
             ]);
 

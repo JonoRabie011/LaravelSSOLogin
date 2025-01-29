@@ -10,24 +10,24 @@ class LaravelLoginServiceProvider extends ServiceProvider
     {
         $this->loadRoutesFrom(__DIR__ . '/routes/web.php');
 
-        if (config('laravel-login.api_enabled')) {
+        if (config('laravel-sso-login.api_enabled')) {
             $this->loadRoutesFrom(__DIR__ . '/routes/api.php');
         }
 
         $this->publishes([
-            __DIR__ . '/config/laravel-login.php' => config_path('laravel-login.php'),
+            __DIR__ . '/config/laravel-sso-login.php' => config_path('laravel-sso-login.php'),
         ], 'config');
 
         $this->publishes([
-            __DIR__ . '/resources/views' => resource_path('views/vendor/laravel-login'),
+            __DIR__ . '/resources/views' => resource_path('views/vendor/laravel-sso-login'),
         ], 'views');
     }
 
     public function register()
     {
         $this->mergeConfigFrom(
-            __DIR__ . '/config/laravel-login.php',
-            'laravel-login'
+            __DIR__ . '/config/laravel-sso-login.php',
+            'laravel-sso-login'
         );
     }
 }
