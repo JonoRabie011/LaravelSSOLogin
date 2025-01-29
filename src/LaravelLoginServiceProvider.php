@@ -10,6 +10,8 @@ class LaravelLoginServiceProvider extends ServiceProvider
     {
         $this->loadRoutesFrom(__DIR__ . '/routes/web.php');
 
+        $this->loadViewsFrom(__DIR__.'/resources/views', 'laravel-sso-login');
+
         if (config('laravel-sso-login.api_enabled')) {
             $this->loadRoutesFrom(__DIR__ . '/routes/api.php');
         }
