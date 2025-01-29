@@ -1,6 +1,6 @@
 <?php
 
-namespace Jonorabie\LaravelLogin;
+namespace LaravelLogin;
 
 use Illuminate\Support\ServiceProvider;
 

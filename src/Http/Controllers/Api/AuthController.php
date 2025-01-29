@@ -1,6 +1,6 @@
 <?php
 
-namespace Jonorabie\LaravelLogin\Http\Controllers\Api;
+namespace LaravelLogin\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use Jonorabie\LaravelLogin\Http\Controllers\AuthController as BaseAuthController;

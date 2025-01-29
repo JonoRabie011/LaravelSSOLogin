@@ -1,6 +1,6 @@
 <?php
 
-namespace Jonorabie\LaravelLogin\Http\Controllers;
+namespace LaravelLogin\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;

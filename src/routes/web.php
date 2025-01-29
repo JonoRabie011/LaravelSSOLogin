@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Jonorabie\LaravelLogin\Http\Controllers\AuthController;
+use LaravelLogin\Http\Controllers\AuthController;
 
 Route::group(['prefix' => 'auth'], function () {
     Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
