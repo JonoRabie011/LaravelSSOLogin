@@ -1,0 +1,37 @@
+<?php
+
+namespace Jonorabie\LaravelLogin\Http\Controllers\Api;
+
+use Illuminate\Http\Request;
+use Jonorabie\LaravelLogin\Http\Controllers\AuthController as BaseAuthController;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\RequestException;
+
+class AuthController extends BaseAuthController
+{
+    public function login(Request $request)
+    {
+        $credentials = $request->only('email', 'password');
+
+        try {
+            $client = new Client();
+            $response = $client->post(config('laravel-login.sso_login_url'), [
+                'json' => $credentials,
+            ]);
+
+            $userData = json_decode($response->getBody(), true);
+
+            // Return JSON response for API
+            return response()->json([
+                'success' => true,
+                'user' => $userData,
+            ]);
+
+        } catch (RequestException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid credentials.',
+            ], 401);
+        }
+    }
+}
