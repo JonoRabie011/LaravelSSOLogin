@@ -5,4 +5,5 @@ A Laravel package for SSO login with customizable `afterLogin` behavior.
 ## Installation
 
 ```bash
-composer require jonorabie/laravel-login
+composer require jrwebdesigns/laravel-sso-login
+```
