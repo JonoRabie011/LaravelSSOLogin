@@ -70,8 +70,8 @@ class AuthController extends Controller
         $userRole = RolePermission::updateOrCreate(
             ['user_id' => $user->id],
             [
-                'name' => $userData['subscription']["associatedRole"]["name"],
-                'permission' => $userData['subscription']["associatedRole"]["permission"],
+                'name' => $userData['subscription']["subscriptionPackage"]["associatedRole"]["name"],
+                'permission' => $userData['subscription']["subscriptionPackage"]["associatedRole"]["permission"],
             ]
         );
 
