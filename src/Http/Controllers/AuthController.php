@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
+use Illuminate\Support\Facades\Http;
 
 class AuthController extends Controller
 {
@@ -20,11 +21,8 @@ class AuthController extends Controller
 
         try {
             // Call SSO API
-            $client = new Client();
+            $client = Http::withToken(config('laravel-login.sso_application_token'));
             $response = $client->post(config('laravel-sso-login.sso_url') . "/sign-in", [
-                'headers' => [
-                    'Authorization' => 'Bearer ' . config('laravel-login.sso_application_token'),
-                ],
                 'body' => json_encode($credentials),
             ]);
 
