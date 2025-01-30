@@ -22,12 +22,19 @@ Trait PermissionService
         $body = json_decode($response->getBody(), true);
 
         $this->role = $body['name'];
-        $this->permissions = base64_decode(substr($body['permissions'], 5));
+        $this->permissions = $this->decodePermissions($body['permissions']);
 
         return [
             'role' => $this->role,
             'permissions' => $this->permissions
         ];
+    }
+
+
+
+    public function decodePermissions($permissions)
+    {
+        return base64_decode(substr($permissions, 5));
     }
 
     /**

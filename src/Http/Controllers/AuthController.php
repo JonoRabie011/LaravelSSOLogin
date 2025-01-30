@@ -7,6 +7,7 @@ use Illuminate\Routing\Controller;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use Illuminate\Support\Facades\Http;
+use LaravelLogin\Services\PermissionService;
 
 class AuthController extends Controller
 {
