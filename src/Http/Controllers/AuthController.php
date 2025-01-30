@@ -4,7 +4,6 @@ namespace LaravelLogin\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use Illuminate\Support\Facades\Http;
 use LaravelLogin\Services\PermissionService;
@@ -21,11 +20,8 @@ class AuthController extends Controller
         $credentials = $request->only('email', 'password');
 
         try {
-            // Call SSO API
-            $client = Http::withToken(config('laravel-login.sso_application_token'));
-            $response = $client->post(config('laravel-sso-login.sso_url') . "/sign-in", [
-                'body' => json_encode($credentials),
-            ]);
+            $response = Http::withToken(config('laravel-login.sso_application_token'))
+                ->post(config('laravel-sso-login.sso_url') . "/sign-in", $credentials);
 
 
             if($response->getStatusCode() !== 200) {
@@ -35,6 +31,12 @@ class AuthController extends Controller
             }
 
             $userData = json_decode($response->getBody(), true);
+
+            if(empty($userData)) {
+                return back()->withErrors([
+                    'email' => 'You do not have permission to access this application.',
+                ]);
+            }
 
             // Trigger afterLogin logic
             return $this->afterLogin($userData);
