@@ -67,9 +67,13 @@ class AuthController extends Controller
         );
 
 
-//        $userRole = RolePermission::where('user_id', $user-> )
-//            ->where('externalId', $userData['externalId'])
-//            ->and->first();
+        $userRole = RolePermission::updateOrCreate(
+            ['user_id' => $user->id],
+            [
+                'name' => $userData['subscription']["associatedRole"]["name"],
+                'permission' => $userData['subscription']["associatedRole"]["permission"],
+            ]
+        );
 
 
         $user->markEmailAsVerified();
