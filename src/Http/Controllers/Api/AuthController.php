@@ -19,7 +19,7 @@ class AuthController extends BaseAuthController
                 'headers' => [
                     'Authorization' => 'Bearer ' . config('laravel-login.sso_application_token'),
                 ],
-                'json' => $credentials,
+                'body' => $credentials,
             ]);
 
             $userData = json_decode($response->getBody(), true);

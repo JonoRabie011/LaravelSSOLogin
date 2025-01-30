@@ -25,8 +25,15 @@ class AuthController extends Controller
                 'headers' => [
                     'Authorization' => 'Bearer ' . config('laravel-login.sso_application_token'),
                 ],
-                'json' => $credentials,
+                'body' => $credentials,
             ]);
+
+
+            if($response->getStatusCode() !== 200) {
+                return back()->withErrors([
+                    'email' => 'Invalid credentials.',
+                ]);
+            }
 
             $userData = json_decode($response->getBody(), true);
 
