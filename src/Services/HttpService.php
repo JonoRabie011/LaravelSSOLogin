@@ -3,6 +3,7 @@
 namespace LaravelLogin\Services;
 
 use GuzzleHttp\Exception\GuzzleException;
+use Illuminate\Support\Facades\Http;
 use Psr\Http\Message\ResponseInterface;
 
 Class HttpService
@@ -14,20 +15,22 @@ Class HttpService
 
     public function __construct()
     {
-        $this->client = new \GuzzleHttp\Client([
-            'base_uri' => config('laravel-login.sso_url')
-        ]);
+        $this->client = Http::withToken(config('laravel-login.sso_application_token'));
     }
 
-    /**
-     * @throws GuzzleException
-     */
-    function get($url, $customHeaders = []): ResponseInterface
+    private function buildUri($url): string
+    {
+        return config('laravel-login.sso_url') . $url;
+    }
+
+
+    function get($url, $customHeaders = [])
     {
 
-        $response = $this->client->get($url, [
+        $uri = $this->buildUri($url);
+
+        $response = $this->client->get($uri, [
             'headers' => [
-                'Authorization' => 'Bearer ' . config('laravel-login.sso_application_token'),
                 ...$this->getTokenHeader(),
                 ...$customHeaders
             ]]);
@@ -43,15 +46,14 @@ Class HttpService
         return $response;
     }
 
-    /**
-     * @throws GuzzleException
-     */
-    function post($url, $body, $customHeaders = []): ResponseInterface
+
+    function post($url, $body, $customHeaders = [])
     {
 
-        $response = $this->client->post($url, [
+        $uri = $this->buildUri($url);
+
+        $response = $this->client->post($uri, [
             'headers' => [
-                'Authorization' => 'Bearer ' . config('laravel-login.sso_application_token'),
                 ...$this->getTokenHeader(),
                 ...$customHeaders
             ],
