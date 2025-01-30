@@ -55,7 +55,7 @@ Class HttpService
                 ...$this->getTokenHeader(),
                 ...$customHeaders
             ],
-            'body' => $body
+            'body' => json_encode($body)
         ]);
 
         if($response->getStatusCode() == 403) {
