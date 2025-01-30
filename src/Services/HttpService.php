@@ -4,6 +4,7 @@ namespace LaravelLogin\Services;
 
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Support\Facades\Http;
+use LaravelLogin\Models\SSOUser;
 use Psr\Http\Message\ResponseInterface;
 
 Class HttpService
@@ -75,6 +76,16 @@ Class HttpService
 
     public function getTokenHeader(): array
     {
+
+        if (empty($this->ssoToken)) {
+            $user = SSOUser::where('email', )->first();
+
+            if($user) {
+                $this->ssoToken = $user->token;
+                $this->ssoRefreshToken = $user->refreshToken;
+            }
+        }
+
         return [
             "SSO-USER-TOKEN" => $this->ssoToken,
             "SSO-REFRESH-TOKEN" => $this->ssoRefreshToken
