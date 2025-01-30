@@ -9,6 +9,6 @@ return [
     // Enable API Mode
     'api_enabled' => false,
 
-    // Custom afterLogin callback (e.g., "App\Http\Controllers\CustomAuthController@afterLogin")
+    // Custom afterLogin callback (e.g., "[\App\Http\CustomAuthController::class, 'afterLogin']")
     'after_login_callback' => null,
 ];
