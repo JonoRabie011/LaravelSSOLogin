@@ -22,9 +22,9 @@ class AuthController extends BaseAuthController
 
 
             if($response->getStatusCode() !== 200) {
-                return back()->withErrors([
-                    'email' => 'Invalid credentials.',
-                ]);
+                return [
+                    'error' => 'Invalid credentials.',
+                ];
             }
 
             $userData = json_decode($response->getBody(), true);
@@ -33,9 +33,9 @@ class AuthController extends BaseAuthController
             return $this->afterLogin($userData);
 
         } catch (RequestException $e) {
-            return back()->withErrors([
-                'email' => 'Invalid credentials.',
-            ]);
+            return [
+                'error' => 'Invalid credentials.',
+            ];
         }
     }
 
