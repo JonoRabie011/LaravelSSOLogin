@@ -2,7 +2,9 @@
 
 return [
     // SSO API Endpoint
-    'sso_login_url' => env('SSO_LOGIN_URL', 'https://sso.jrwebdesigns.co.za/login'),
+    'sso_url' => env('SSO_URL', 'https://sso.jrwebdesigns.co.za/api'),
+
+    'sso_application_token' => env('SSO_APPLICATION_TOKEN', 'YOUR_APPLICATION'),
 
     // Enable API Mode
     'api_enabled' => false,

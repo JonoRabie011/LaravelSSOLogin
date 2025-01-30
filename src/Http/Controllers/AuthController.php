@@ -21,7 +21,10 @@ class AuthController extends Controller
         try {
             // Call SSO API
             $client = new Client();
-            $response = $client->post(config('laravel-sso-login.sso_login_url'), [
+            $response = $client->post(config('laravel-sso-login.sso_url'. "/sign-in"), [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . config('laravel-login.sso_application_token'),
+                ],
                 'json' => $credentials,
             ]);
 

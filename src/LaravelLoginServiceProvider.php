@@ -3,6 +3,8 @@
 namespace LaravelLogin;
 
 use Illuminate\Support\ServiceProvider;
+use LaravelLogin\Services\LarvelSingleSignOn;
+use LaravelLogin\Services\PermissionService;
 
 class LaravelLoginServiceProvider extends ServiceProvider
 {
@@ -31,5 +33,9 @@ class LaravelLoginServiceProvider extends ServiceProvider
             __DIR__ . '/config/laravel-sso-login.php',
             'laravel-sso-login'
         );
+
+        $this->app->singleton(LarvelSingleSignOn::class, function () {
+            return new LarvelSingleSignOn();
+        });
     }
 }

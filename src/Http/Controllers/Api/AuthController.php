@@ -3,7 +3,7 @@
 namespace LaravelLogin\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
-use Jonorabie\LaravelLogin\Http\Controllers\AuthController as BaseAuthController;
+use LaravelLogin\Http\Controllers\AuthController as BaseAuthController;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 
@@ -15,7 +15,10 @@ class AuthController extends BaseAuthController
 
         try {
             $client = new Client();
-            $response = $client->post(config('laravel-login.sso_login_url'), [
+            $response = $client->post(config('laravel-login.sso_login_url') . "/sign-in", [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . config('laravel-login.sso_application_token'),
+                ],
                 'json' => $credentials,
             ]);
 
