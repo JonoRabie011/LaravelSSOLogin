@@ -3,8 +3,8 @@
 namespace LaravelLogin\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 use LaravelLogin\Http\Controllers\AuthController as BaseAuthController;
-use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 
 class AuthController extends BaseAuthController
@@ -14,27 +14,41 @@ class AuthController extends BaseAuthController
         $credentials = $request->only('email', 'password');
 
         try {
-            $client = new Client();
-            $response = $client->post(config('laravel-login.sso_login_url') . "/sign-in", [
-                'headers' => [
-                    'Authorization' => 'Bearer ' . config('laravel-login.sso_application_token'),
-                ],
-                'body' => $credentials,
+            // Call SSO API
+            $client = Http::withToken(config('laravel-login.sso_application_token'));
+            $response = $client->post(config('laravel-sso-login.sso_url') . "/sign-in", [
+                'body' => json_encode($credentials),
             ]);
+
+
+            if($response->getStatusCode() !== 200) {
+                return back()->withErrors([
+                    'email' => 'Invalid credentials.',
+                ]);
+            }
 
             $userData = json_decode($response->getBody(), true);
 
-            // Return JSON response for API
-            return response()->json([
-                'success' => true,
-                'user' => $userData,
-            ]);
+            // Trigger afterLogin logic
+            return $this->afterLogin($userData);
 
         } catch (RequestException $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Invalid credentials.',
-            ], 401);
+            return back()->withErrors([
+                'email' => 'Invalid credentials.',
+            ]);
         }
+    }
+
+    protected function afterLogin($userData)
+    {
+        // Use custom callback if defined
+        $callback = config('laravel-sso-login.after_login_callback');
+        if ($callback && is_callable($callback)) {
+            return call_user_func($callback, $userData);
+        }
+
+        // Default behavior: Store user in session
+        session(['user' => $userData]);
+        return $userData;
     }
 }
