@@ -2,6 +2,8 @@
 
 namespace LaravelLogin\Services;
 
+use GuzzleHttp\Exception\GuzzleException;
+
 Trait PermissionService
 {
 
@@ -26,6 +28,43 @@ Trait PermissionService
             'role' => $this->role,
             'permissions' => $this->permissions
         ];
+    }
+
+    /**
+     * Check if the current user has a specific permission
+     * @param $permission string Permission to check e.g. 'view_users'
+     * @return bool
+     * @throws GuzzleException
+     */
+    public function hasPermission($permission): bool
+    {
+        if(empty($this->permissions)) {
+            $this->getCurrentRoleFromApi();
+        }
+
+        return in_array($permission, explode(',', $this->permissions));
+    }
+
+    /**
+     * Check if the current user has all of the specified permissions
+     * @param array $permissions Array of permissions e.g. ['view_users', 'edit_users']
+     * @return bool
+     * @throws GuzzleException
+     */
+    public function hasPermissions(array $permissions = []): bool
+    {
+        if(empty($this->permissions)) {
+            $this->getCurrentRoleFromApi();
+        }
+
+        $permissions = explode(',', $permissions);
+        foreach ($permissions as $permission) {
+            if (!in_array($permission, explode(',', $this->permissions))) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
 
