@@ -11,4 +11,6 @@ return [
 
     // Custom afterLogin callback (e.g., "[\App\Http\CustomAuthController::class, 'afterLogin']")
     'after_login_callback' => null,
+
+    'database_connection' => env('SSO_DATABASE_CONNECTION', null),
 ];

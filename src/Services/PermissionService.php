@@ -24,12 +24,14 @@ Trait PermissionService
         $this->role = $body['name'];
         $this->permissions = $this->decodePermissions($body['permissions']);
 
+
+
+
         return [
             'role' => $this->role,
             'permissions' => $this->permissions
         ];
     }
-
 
 
     public function decodePermissions($permissions)

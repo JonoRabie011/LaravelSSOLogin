@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use GuzzleHttp\Exception\RequestException;
 use Illuminate\Support\Facades\Http;
+use LaravelLogin\Models\RolePermission;
+use LaravelLogin\Models\SSOUser;
 use LaravelLogin\Services\PermissionService;
 
 class AuthController extends Controller
@@ -38,6 +40,7 @@ class AuthController extends Controller
                 ]);
             }
 
+
             // Trigger afterLogin logic
             return $this->afterLogin($userData);
 
@@ -50,6 +53,27 @@ class AuthController extends Controller
 
     protected function afterLogin($userData)
     {
+
+        $user = SSOUser::updateOrCreate(
+            ['email' => $userData['email']],
+            [
+                'firstName' => $userData['firstName'],
+                'lastName' => $userData['lastName'],
+                'guuid' => $userData['guuid'],
+                'token' => $userData['token'],
+                'refreshToken' => $userData['refreshToken'],
+                'externalId' => $userData['externalId'],
+            ]
+        );
+
+
+//        $userRole = RolePermission::where('user_id', $user-> )
+//            ->where('externalId', $userData['externalId'])
+//            ->and->first();
+
+
+        $user->markEmailAsVerified();
+
         // Use custom callback if defined
         $callback = config('laravel-sso-login.after_login_callback');
         if ($callback && is_callable($callback)) {
@@ -57,7 +81,7 @@ class AuthController extends Controller
         }
 
         // Default behavior: Store user in session and redirect
-        session(['user' => $userData]);
+        session(['user' => $user]);
         return redirect('/dashboard');
     }
 
