@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up()
     {
-        Schema::connection(config('database.default'))::create('sso_roles_permissions', function (Blueprint $table) {
+        Schema::connection(config('database.default'))->create('sso_roles_permissions', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->string('permission')->nullable();
