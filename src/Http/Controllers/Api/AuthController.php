@@ -27,17 +27,17 @@ class AuthController extends Controller
 
 
             if($response->getStatusCode() !== 200) {
-                return back()->withErrors([
+                return [
                     'email' => 'Invalid credentials.',
-                ]);
+                ];
             }
 
             $userData = json_decode($response->getBody(), true);
 
             if(empty($userData)) {
-                return back()->withErrors([
+                return [
                     'email' => 'You do not have permission to access this application.',
-                ]);
+                ];
             }
 
 
@@ -45,28 +45,30 @@ class AuthController extends Controller
             return $this->afterLogin($userData);
 
         } catch (RequestException $e) {
-            return back()->withErrors([
+            return [
                 'email' => 'Invalid credentials.',
-            ]);
+            ];
         }
     }
 
     protected function afterLogin($userData)
     {
 
-        $user = SSOUser::updateOrCreate(
-            ['email' => $userData['email']],
-            [
-                'firstName' => $userData['firstName'],
-                'lastName' => $userData['lastName'],
-                'guuid' => $userData['guuid'],
-                'token' => $userData['token'],
-                'refreshToken' => $userData['refreshToken'],
-                'externalId' => $userData['externalId'],
-            ]
-        );
-
-        $user->markEmailAsVerified();
+//        $user = SSOUser::updateOrCreate(
+//            ['email' => $userData['email']],
+//            [
+//                'firstName' => $userData['firstName'],
+//                'lastName' => $userData['lastName'],
+//                'guuid' => $userData['guuid'],
+//                'token' => $userData['token'],
+//                'refreshToken' => $userData['refreshToken'],
+//                'externalId' => $userData['externalId'],
+//            ]
+//        );
+//
+//        $user->markEmailAsVerified();
+//
+//        Auth()->login($user);
 
         // Use custom callback if defined
         $callback = config('laravel-sso-login.after_login_callback');
@@ -75,11 +77,14 @@ class AuthController extends Controller
         }
 
         // Default behavior: Store user in session and redirect
-        session(['user' => $user]);
         return [
-            'user' => $user,
-            'token' => $user->createToken('web-token', ["*"], now()->addWeek())->plainTextToken
+            'user' => $userData
         ];
+//        session(['user' => $user]);
+//        return [
+//            'user' => $user,
+//            'token' => $user->createToken('web-token', ["*"], now()->addWeek())->plainTextToken
+//        ];
     }
 
     public function logout(Request $request)

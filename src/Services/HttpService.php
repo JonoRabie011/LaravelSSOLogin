@@ -16,7 +16,9 @@ Class HttpService
 
     public function __construct()
     {
-        $this->client = Http::withToken(config('laravel-sso-login.sso_application_token'));
+
+//        dd("token:". config('laravel-sso-login.sso_application_token'));
+//        $this->client = Http::class;
     }
 
     private function buildUri($url): string
@@ -29,12 +31,10 @@ Class HttpService
     {
 
         $uri = $this->buildUri($url);
-
-        $response = $this->client->get($uri, [
-            'headers' => [
-                ...$this->getTokenHeader(),
-                ...$customHeaders
-            ]]);
+        $response = Http::withHeaders([
+            ...$this->getTokenHeader(),
+            ...$customHeaders
+        ])->get($uri);
 
         if($response->getStatusCode() == 401) {
             $this->refreshToken();
@@ -53,11 +53,10 @@ Class HttpService
 
         $uri = $this->buildUri($url);
 
-        $response = $this->client->post($uri, [
-            'headers' => [
-                ...$this->getTokenHeader(),
-                ...$customHeaders
-            ],
+        $response = Http::withHeaders([
+            ...$this->getTokenHeader(),
+            ...$customHeaders
+        ])->post($uri, [
             'body' => json_encode($body)
         ]);
 
@@ -66,7 +65,10 @@ Class HttpService
         }
 
         if ($response->getStatusCode() == 200) {
-            $this->saveToken($response->getHeader('SSO-USER-TOKEN')[0], $response->getHeader('SSO-REFRESH-TOKEN')[0]);
+            $this->saveToken(
+                $response->getHeader(strtolower('SSO-USER-TOKEN'))[0],
+                $response->getHeader(strtolower('SSO-REFRESH-TOKEN'))[0]
+            );
         }
 
         return $response;
@@ -87,8 +89,9 @@ Class HttpService
         }
 
         return [
-            "SSO-USER-TOKEN" => $this->ssoToken,
-            "SSO-REFRESH-TOKEN" => $this->ssoRefreshToken
+            "Authorization" => "Bearer " . config('laravel-sso-login.sso_application_token'),
+            strtolower("SSO-USER-TOKEN") => $this->ssoToken,
+            strtolower("SSO-REFRESH-TOKEN") => $this->ssoRefreshToken
         ];
     }
 
