@@ -1,6 +1,6 @@
 <?php
 
-namespace LaravelLogin\Http\Controllers;
+namespace LaravelLogin\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
