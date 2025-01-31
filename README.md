@@ -8,27 +8,96 @@ A Laravel package for SSO login with customizable `afterLogin` behavior.
 composer require jrwebdesigns/laravel-sso-login
 ```
 
-If you would like to publish override the afterLogin behavior, you can add a laravel-sso-login.php config file to your config directory:
+If you would like to override the afterLogin behavior, you can add a laravel-sso-login.php config file to your config directory:
 
 ```php
-
 <?php
 
 return [
     // SSO API Endpoint
     'sso_url' => env('SSO_URL', 'https://sso.jrwebdesigns.co.za/api'),
 
-    'sso_application_token' => env('SSO_APPLICATION_TOKEN', 'YOUR_APPLICATION'),
+    // SSO Application Token
+    'sso_application_token' => env('SSO_APPLICATION_TOKEN'),
 
     // Enable API Mode
-    'api_enabled' => false,
+    'api_enabled' => false, // Setting this to true will enable the API mode and responses will be in JSON format 
 
+    // Custom logout callback (e.g., "[\App\Http\CustomAuthController::class, 'logout']")
+    'logout_callback' => null,
+    
     // Custom afterLogin callback (e.g., "[\App\Http\CustomAuthController::class, 'afterLogin']")
     'after_login_callback' => null,
 ];
-
 ```
 
+Here is an example of how to override the afterLogin behavior:
+
+```php
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
+use LaravelLogin\Services\LarvelSingleSignOn;
+
+class CustomAuthController extends Controller
+{
+    public static function afterLogin($userData)
+    {
+        // Custom afterLogin behavior
+
+        $permission = new LarvelSingleSignOn(
+            $userData['token'],
+            $userData['refreshToken']
+        );
+
+        $user = User::where('email', $userData['email'])->first();
+
+        if(!$user) {
+            $user = new User();
+            $user->name = $userData['firstName'] . ' ' . $userData['lastName'];
+            $user->email = $userData['email'];
+            $user->password = bcrypt('password');
+            $user->save();
+        }
+
+
+        Auth()->login($user);
+        $user = Auth::guard('web')->user();
+
+
+        return [
+            'user' => $user,
+            'token' => $user->createToken('web-token', ["*"], now()->addWeek())->plainTextToken
+        ];
+
+    }
+}
+```
+
+Here is an example of how to override the logout behavior:
+
+```php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
+
+class CustomLogoutController extends Controller {
+    
+    public static function logout(Request $request)
+    {
+        // Custom logout behavior
+        $request->session()->forget('user');
+        return redirect('/login');
+    }
+}
+```
+
+# Response From SSO
 
 ### 200 Success
 

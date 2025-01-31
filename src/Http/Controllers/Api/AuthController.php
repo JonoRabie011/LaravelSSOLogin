@@ -28,6 +28,8 @@ class AuthController extends Controller
 
             if($response->getStatusCode() !== 200) {
                 return [
+                    'status' => 'error',
+                    'message' => $response->body(),
                     'email' => 'Invalid credentials.',
                 ];
             }
@@ -36,6 +38,7 @@ class AuthController extends Controller
 
             if(empty($userData)) {
                 return [
+                    'status' => 'error',
                     'email' => 'You do not have permission to access this application.',
                 ];
             }
@@ -46,6 +49,7 @@ class AuthController extends Controller
 
         } catch (RequestException $e) {
             return [
+                'status' => 'error',
                 'email' => 'Invalid credentials.',
             ];
         }
@@ -77,18 +81,22 @@ class AuthController extends Controller
         }
 
         // Default behavior: Store user in session and redirect
+        session(['user' => $userData]);
+
         return [
             'user' => $userData
         ];
-//        session(['user' => $user]);
-//        return [
-//            'user' => $user,
-//            'token' => $user->createToken('web-token', ["*"], now()->addWeek())->plainTextToken
-//        ];
     }
 
     public function logout(Request $request)
     {
+
+        // Use custom callback if defined
+        $callback = config('laravel-sso-login.logout_callback');
+        if ($callback && is_callable($callback)) {
+            return call_user_func($callback, $request);
+        }
+
         $request->session()->forget('user');
         return redirect('/login');
     }

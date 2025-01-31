@@ -2,13 +2,9 @@
 
 namespace LaravelLogin\Http\Controllers;
 
+
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use GuzzleHttp\Exception\RequestException;
-use Illuminate\Support\Facades\Http;
-use LaravelLogin\Models\RolePermission;
-use LaravelLogin\Models\SSOUser;
-use LaravelLogin\Services\PermissionService;
 
 class AuthController extends Controller
 {
@@ -87,12 +83,19 @@ class AuthController extends Controller
         }
 
         // Default behavior: Store user in session and redirect
-        session(['user' => $user]);
+        session(['user' => $userData]);
         return redirect('/dashboard');
     }
 
     public function logout(Request $request)
     {
+
+        // Use custom callback if defined
+        $callback = config('laravel-sso-login.logout_callback');
+        if ($callback && is_callable($callback)) {
+            return call_user_func($callback, $request);
+        }
+
         $request->session()->forget('user');
         return redirect('/login');
     }

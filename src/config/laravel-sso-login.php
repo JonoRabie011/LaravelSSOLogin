@@ -12,5 +12,9 @@ return [
     // Custom afterLogin callback (e.g., "[\App\Http\CustomAuthController::class, 'afterLogin']")
     'after_login_callback' => null,
 
+    // Custom logout callback (e.g., "[\App\Http\CustomAuthController::class, 'logout']")
+    'logout_callback' => null,
+
+    // Database connection to use for SSO user storage
     'database_connection' => env('SSO_DATABASE_CONNECTION', null),
 ];
