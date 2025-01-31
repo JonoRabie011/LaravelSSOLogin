@@ -30,7 +30,7 @@ class LaravelLoginServiceProvider extends ServiceProvider
         ], 'sso-migrations');
 
         $this->publishes([
-            __DIR__ . '/resources/css' => public_path('vendor/jrwebdesigns/laravel-sso-login/css'),
+            __DIR__ . '/resources/css' => public_path('vendor/jrwebdesigns/laravel-sso-login/src/resources/css'),
         ], 'public');
 
         $this->loadRoutesFrom(__DIR__ . '/routes/web.php');
