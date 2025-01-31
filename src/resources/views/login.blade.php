@@ -23,10 +23,6 @@
             <button class="form-btn" type="submit">Log in</button>
         </form>
 
-        <p class="sign-up-label">
-<!--            Don't have an account? <a class="sign-up-link" href="{{ route('register') }}">Sign up</a>-->
-        </p>
-
         @if (session('message'))
         <span class="alert alert-danger d-block mx-auto text-center" role="alert">
                     {{ session('message') }}
