@@ -24,7 +24,7 @@
         </form>
 
         <p class="sign-up-label">
-            Don't have an account? <a class="sign-up-link" href="{{ route('register') }}">Sign up</a>
+<!--            Don't have an account? <a class="sign-up-link" href="{{ route('register') }}">Sign up</a>-->
         </p>
 
         @if (session('message'))
