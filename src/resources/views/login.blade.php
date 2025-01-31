@@ -23,11 +23,11 @@
             <button class="form-btn" type="submit">Log in</button>
         </form>
 
-        @if (session('message'))
-        <span class="alert alert-danger d-block mx-auto text-center" role="alert">
-                    {{ session('message') }}
-        </span>
-        @endif
+        @error('message')
+        <div class="alert alert-danger d-block mx-auto text-center" role="alert">
+            {{ $message }}
+        </div>
+        @enderror
 
         <div class="buttons-container">
             @if (!empty($integrations['google']))
