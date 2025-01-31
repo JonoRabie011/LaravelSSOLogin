@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-    <link rel="stylesheet" href="{{ asset('vendor/jrwebdesigns/laravel-sso-login/src/resources/css/login.css') }}">
+    <link rel="stylesheet" href="{{ asset('vendor/laravel-sso-login/css/login.css') }}">
 </head>
 <body>
 <div class="main-container">
