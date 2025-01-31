@@ -23,11 +23,14 @@
             <button class="form-btn" type="submit">Log in</button>
         </form>
 
-        @error('message')
-        <div class="alert alert-danger d-block mx-auto text-center" role="alert">
-            {{ $message }}
+        @if ($errors->any())
+        <div class="alert alert-danger d-block mx-auto text-center">
+            @foreach ($errors->all() as $error)
+            {{ $error }}
+            @endforeach
         </div>
-        @enderror
+        @endif
+
 
         <div class="buttons-container">
             @if (!empty($integrations['google']))
