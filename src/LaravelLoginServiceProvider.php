@@ -29,6 +29,10 @@ class LaravelLoginServiceProvider extends ServiceProvider
             __DIR__ . '/database/migrations/' => database_path('migrations'),
         ], 'sso-migrations');
 
+        $this->publishes([
+            __DIR__ . '/../resources/css' => public_path('vendor/laravel-sso-login/css'),
+        ], 'public');
+
         $this->loadRoutesFrom(__DIR__ . '/routes/web.php');
 
         $this->loadViewsFrom(__DIR__.'/resources/views', 'laravel-sso-login');
