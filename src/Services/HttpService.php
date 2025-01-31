@@ -16,12 +16,12 @@ Class HttpService
 
     public function __construct()
     {
-        $this->client = Http::withToken(config('laravel-login.sso_application_token'));
+        $this->client = Http::withToken(config('laravel-sso-login.sso_application_token'));
     }
 
     private function buildUri($url): string
     {
-        return config('laravel-login.sso_url') . $url;
+        return config('laravel-sso-login.sso_url') . $url;
     }
 
 
@@ -108,9 +108,9 @@ Class HttpService
     public function refreshToken()
     {
         $client = new \GuzzleHttp\Client();
-        $response = $client->post(config('laravel-login.sso_url') . "/refresh", [
+        $response = $client->post(config('laravel-sso-login.sso_url') . "/refresh", [
             'headers' => [
-                'Authorization' => 'Bearer ' . config('laravel-login.sso_application_token'),
+                'Authorization' => 'Bearer ' . config('laravel-sso-login.sso_application_token'),
                 ...$this->getTokenHeader()
             ]
         ]);
