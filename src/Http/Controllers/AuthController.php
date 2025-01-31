@@ -22,7 +22,7 @@ class AuthController extends Controller
         $credentials = $request->only('email', 'password');
 
         try {
-            $response = Http::withToken(config('laravel-login.sso_application_token'))
+            $response = Http::withToken(config('laravel-sso-login.sso_application_token'))
                 ->post(config('laravel-sso-login.sso_url') . "/sign-in", $credentials);
 
 
