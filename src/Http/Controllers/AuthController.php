@@ -20,6 +20,8 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $credentials = $request->only('email', 'password');
+        $credentials['device_ip'] = $request->ip();
+        $credentials['keep_logged_in'] = true;
 
         try {
             $response = Http::withToken(config('laravel-sso-login.sso_application_token'))
