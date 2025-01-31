@@ -12,7 +12,6 @@ return new class extends Migration {
             $table->id();
             $table->string('name');
             $table->string('permission')->nullable();
-            $table->integer('user_id')->nullable();
             $table->foreignId('user_id')->constrained('sso_users')->onDelete('cascade');
             $table->timestamps();
         });
