@@ -28,7 +28,7 @@ class AuthController extends Controller
 
             if($response->getStatusCode() !== 200) {
                 return back()->withErrors([
-                    'email' => 'Invalid credentials.',
+                    'message' => 'Invalid credentials.',
                 ]);
             }
 
@@ -36,7 +36,7 @@ class AuthController extends Controller
 
             if(empty($userData)) {
                 return back()->withErrors([
-                    'email' => 'You do not have permission to access this application.',
+                    'message' => 'You do not have permission to access this application.',
                 ]);
             }
 
@@ -46,7 +46,7 @@ class AuthController extends Controller
 
         } catch (RequestException $e) {
             return back()->withErrors([
-                'email' => 'Invalid credentials.',
+                'message' => 'Invalid credentials.',
             ]);
         }
     }

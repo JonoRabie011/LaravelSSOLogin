@@ -26,7 +26,7 @@
         @if (session('message'))
         <span class="alert alert-danger d-block mx-auto text-center" role="alert">
                     {{ session('message') }}
-                </span>
+        </span>
         @endif
 
         <div class="buttons-container">
