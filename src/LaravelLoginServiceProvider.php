@@ -7,31 +7,26 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
 use LaravelLogin\Services\LarvelSingleSignOn;
-use LaravelLogin\Services\PermissionService;
 
 class LaravelLoginServiceProvider extends ServiceProvider
 {
     public function boot()
     {
-        if (config('laravel-sso-login.api_enabled')) {
-            $this->loadRoutesFrom(__DIR__ . '/routes/api.php');
-        }
 
         $this->publishes([
             __DIR__ . '/config/laravel-sso-login.php' => config_path('laravel-sso-login.php'),
         ], 'config');
 
         $this->publishes([
-            __DIR__ . '/resources/views' => resource_path('views/vendor/laravel-sso-login'),
-        ], 'views');
-
-        $this->publishes([
-            __DIR__ . '/database/migrations/' => database_path('migrations'),
-        ], 'sso-migrations');
-
-        $this->publishes([
             __DIR__ . '/resources/css' => public_path('vendor/laravel-sso-login/css'),
         ], 'public');
+
+
+        /*
+         * Setup the routes
+         *
+         * If the API is enabled, load the API routes, otherwise load the web routes
+         */
 
         if(config('laravel-sso-login.api_enabled')) {
             $this->loadRoutesFrom(__DIR__ . '/routes/api.php');
@@ -39,20 +34,32 @@ class LaravelLoginServiceProvider extends ServiceProvider
             $this->loadRoutesFrom(__DIR__ . '/routes/web.php');
         }
 
+
+        /*
+         * Setup the views
+         */
+
+        $this->publishes([
+            __DIR__ . '/resources/views' => resource_path('views/vendor/laravel-sso-login'),
+        ], 'views');
         $this->loadViewsFrom(__DIR__.'/resources/views', 'laravel-sso-login');
-
-        $this->loadMigrationsFrom(__DIR__ . '/database/migrations');
-
 
         /*
          * Setup the database
          */
+
+        $this->publishes([
+            __DIR__ . '/database/migrations/' => database_path('migrations'),
+        ], 'sso-migrations');
 
         $this->setupDatabase();
 
         $this->loadMigrationsFrom(__DIR__ . '/database/migrations');
     }
 
+    /**
+     * Setup the database connection
+     */
     protected function setupDatabase()
     {
         $customConnection = config('laravel-sso-login.database_connection');
@@ -69,6 +76,10 @@ class LaravelLoginServiceProvider extends ServiceProvider
         }
     }
 
+
+    /**
+     * Dynamically set SQLite as the database connection
+     */
     protected function useSQLite()
     {
         $databasePath = storage_path('app/sso_database.sqlite');
@@ -89,6 +100,7 @@ class LaravelLoginServiceProvider extends ServiceProvider
         Config::set('database.default', 'sso_sqlite');
     }
 
+
     public function register()
     {
         $this->mergeConfigFrom(
@@ -97,7 +109,7 @@ class LaravelLoginServiceProvider extends ServiceProvider
         );
 
         $this->app->singleton(LarvelSingleSignOn::class, function () {
-            return new LarvelSingleSignOn();
+            return new LarvelSingleSignOn::class;
         });
     }
 }

@@ -153,3 +153,16 @@ class CustomLogoutController extends Controller {
 ```json
  "Unauthorized"
 ```
+
+
+## Views
+
+You can publish the views by running the following command:
+
+```bash
+php artisan vendor:publish --tag=views
+```
+
+This will copy the packages views to the into your app in, Allowing you to customize the views to your liking:
+
+`resources/views/vendor/laravel-sso-login`
