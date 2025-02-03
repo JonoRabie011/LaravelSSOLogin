@@ -5,6 +5,9 @@
   "scripts": {
     "post-install-cmd": [
       "@php artisan laravel-login:install"
+    ],
+    "post-uninstall-cmd": [
+      "@php artisan laravel-login:uninstall"
     ]
   },
   "authors": [

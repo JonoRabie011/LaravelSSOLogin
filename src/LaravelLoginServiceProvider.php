@@ -62,6 +62,7 @@ class LaravelLoginServiceProvider extends ServiceProvider
         if($this->app->runningInConsole()) {
             $this->commands([
                 InstallPackageCommand::class,
+                UnInstallPackageCommand::class
             ]);
         }
     }
