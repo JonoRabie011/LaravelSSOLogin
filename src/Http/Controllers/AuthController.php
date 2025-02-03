@@ -62,7 +62,6 @@ class AuthController extends Controller
                 'guuid' => $userData['guuid'],
                 'token' => $userData['token'],
                 'refreshToken' => $userData['refreshToken'],
-                'externalId' => $userData['externalId'],
             ]
         );
 
