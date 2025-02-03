@@ -6,6 +6,7 @@ namespace LaravelLogin\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Http;
+use LaravelLogin\Models\SSOUser;
 
 class AuthController extends Controller
 {
@@ -53,29 +54,31 @@ class AuthController extends Controller
     protected function afterLogin($userData)
     {
 
-//        $user = SSOUser::updateOrCreate(
-//            ['email' => $userData['email']],
-//            [
-//                'firstName' => $userData['firstName'],
-//                'lastName' => $userData['lastName'],
-//                'guuid' => $userData['guuid'],
-//                'token' => $userData['token'],
-//                'refreshToken' => $userData['refreshToken'],
-//                'externalId' => $userData['externalId'],
-//            ]
-//        );
-//
-//
-//        $userRole = RolePermission::updateOrCreate(
-//            ['user_id' => $user->id],
-//            [
-//                'name' => $userData['subscription']["subscriptionPackage"]["associatedRole"]["name"],
-//                'permission' => $userData['subscription']["subscriptionPackage"]["associatedRole"]["permission"],
-//            ]
-//        );
-//
-//
-//        $user->markEmailAsVerified();
+        $user = SSOUser::updateOrCreate(
+            ['email' => $userData['email']],
+            [
+                'firstName' => $userData['firstName'],
+                'lastName' => $userData['lastName'],
+                'guuid' => $userData['guuid'],
+                'token' => $userData['token'],
+                'refreshToken' => $userData['refreshToken'],
+                'externalId' => $userData['externalId'],
+            ]
+        );
+
+
+        $role = $userData['subscription']["subscriptionPackage"]["associatedRole"];
+
+        $permissions = (array) base64_decode(substr($role['permission'], 5));
+
+        foreach ($permissions as $permission) {
+            $user->role()->updateOrCreate([
+                'name' => $role['name'],
+                'permission' => $permission,
+            ]);
+        }
+
+        $user->markEmailAsVerified();
 
         // Use custom callback if defined
         $callback = config('laravel-sso-login.after_login_callback');
