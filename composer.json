@@ -2,6 +2,12 @@
   "name": "jrwebdesigns/laravel-sso-login",
   "description": "Laravel package for SSO login with customizable afterLogin behavior.",
   "license": "MIT",
+  "authors": [
+    {
+      "name": "Jrwebdesigns",
+      "email": "your-email@example.com"
+    }
+  ],
   "scripts": {
     "post-install-cmd": [
       "@php artisan laravel-login:install"
@@ -10,12 +16,6 @@
       "@php artisan laravel-login:uninstall"
     ]
   },
-  "authors": [
-    {
-      "name": "Jrwebdesigns",
-      "email": "your-email@example.com"
-    }
-  ],
   "require": {
     "php": "^7.4|^8.0",
     "laravel/framework": "^8.0|^9.0|^10.0",
