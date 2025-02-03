@@ -20,9 +20,9 @@ class SSOUser extends Authenticatable
         'externalId'
     ];
 
-    public function role()
+    public function roles()
     {
-        return $this->belongsTo(RolePermission::class, 'sso_user_roles', 'user_id', 'role_id');
+        return $this->hasMany(RolePermission::class, 'user_id');
     }
 //
 //    public function hasPermission($permission): bool

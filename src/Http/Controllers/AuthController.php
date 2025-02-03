@@ -6,7 +6,9 @@ namespace LaravelLogin\Http\Controllers;
 use GuzzleHttp\Exception\RequestException;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
+use LaravelLogin\Models\RolePermission;
 use LaravelLogin\Models\SSOUser;
 
 class AuthController extends Controller
@@ -71,13 +73,18 @@ class AuthController extends Controller
 
         $permissions = json_decode(base64_decode(substr($role['permissions'], 5)));
 
-        foreach ($permissions as $permission) {
-            $user->role()->updateOrCreate([
-                'user_id' => $user->id,
-                'name' => $role['name'],
-                'permission' => $permission,
-            ]);
-        }
+        DB::transaction(function () use ($user, $permissions, $role) {
+
+            // Remove roles that are not in the new roles list
+            $user->roles()->whereNotIn('name', $permissions)->delete();
+
+            foreach ($permissions as $permission) {
+                $user->roles()->updateOrCreate(
+                    ['name' => $role['name'], 'permission' => $permission],  // Find existing role
+                    ['permission' => $permission] // Update or create new
+                );
+            }
+        });
 
 //        $user->markEmailAsVerified();
 
