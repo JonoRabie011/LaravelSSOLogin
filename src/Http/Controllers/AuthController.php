@@ -3,6 +3,7 @@
 namespace LaravelLogin\Http\Controllers;
 
 
+use GuzzleHttp\Exception\RequestException;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Http;
