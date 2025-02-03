@@ -55,6 +55,15 @@ class LaravelLoginServiceProvider extends ServiceProvider
         $this->setupDatabase();
 
         $this->loadMigrationsFrom(__DIR__ . '/database/migrations');
+
+        /*
+         * Setup the commands
+         */
+        if($this->app->runningInConsole()) {
+            $this->commands([
+                InstallPackageCommand::class,
+            ]);
+        }
     }
 
     /**
