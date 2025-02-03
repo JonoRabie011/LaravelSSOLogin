@@ -2,7 +2,6 @@
 
 namespace LaravelLogin\Http\Controllers;
 
-
 use GuzzleHttp\Exception\RequestException;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -13,6 +12,13 @@ use LaravelLogin\Models\SSOUser;
 
 class AuthController extends Controller
 {
+    protected $userModel;
+
+    public function __construct()
+    {
+        $this->userModel = config('laravel-sso-login.user_model', SSOUser::class);
+    }
+
     public function showLoginForm()
     {
         return view('laravel-sso-login::login');
@@ -28,37 +34,29 @@ class AuthController extends Controller
             $response = Http::withToken(config('laravel-sso-login.sso_application_token'))
                 ->post(config('laravel-sso-login.sso_url') . "/sign-in", $credentials);
 
-
-            if($response->getStatusCode() !== 200) {
-                return back()->withErrors([
-                    'message' => 'Invalid credentials.',
-                ]);
+            if ($response->failed()) {
+                return back()->withErrors(['message' => 'Invalid credentials.']);
             }
 
-            $userData = json_decode($response->getBody(), true);
+            $userData = $response->json();
 
-            if(empty($userData)) {
-                return back()->withErrors([
-                    'message' => 'You do not have permission to access this application.',
-                ]);
+            if (empty($userData)) {
+                return back()->withErrors(['message' => 'You do not have permission to access this application.']);
             }
 
-
-            // Trigger afterLogin logic
             return $this->afterLogin($userData);
 
         } catch (RequestException $e) {
-            return back()->withErrors([
-                'message' => 'Invalid credentials.',
-            ]);
+            return back()->withErrors(['message' => 'Invalid credentials.']);
         }
     }
 
     protected function afterLogin($userData)
     {
+        $userModel = $this->userModel;
 
-        $user = SSOUser::updateOrCreate(
-            ['email' => $userData['email']],
+        $user = $userModel::updateOrCreate(
+            ['guuid' => $userData['guuid']],
             [
                 'firstName' => $userData['firstName'],
                 'lastName' => $userData['lastName'],
@@ -68,43 +66,38 @@ class AuthController extends Controller
             ]
         );
 
-
-        $role = $userData['subscription']["subscriptionPackage"]["associatedRole"];
-
-        $permissions = json_decode(base64_decode(substr($role['permissions'], 5)));
+        $role = $userData['subscription']['subscriptionPackage']['associatedRole'];
+        $permissions = json_decode(base64_decode(substr($role['permissions'], 5)), true);
 
         DB::transaction(function () use ($user, $permissions, $role) {
-
-            // Remove roles that are not in the new roles list
             $user->roles()->whereNotIn('name', $permissions)->delete();
 
             foreach ($permissions as $permission) {
-                $user->roles()->updateOrCreate(
-                    ['name' => $role['name'], 'permission' => $permission],  // Find existing role
-                    ['permission' => $permission] // Update or create new
+                RolePermission::updateOrCreate(
+                    [
+                        'name' => $role['name'],
+                        'permission' => $permission,
+                        'user_id' => $user->id
+                    ],
+                    [
+                        'permission' => $permission
+                    ]
                 );
             }
         });
 
-//        $user->markEmailAsVerified();
-
-        // Use custom callback if defined
-        $callback = config('laravel-sso-login.after_login_callback');
-        if ($callback && is_callable($callback)) {
-            return call_user_func($callback, $userData);
+        // Handle custom login callback
+        if ($callback = config('laravel-sso-login.after_login_callback')) {
+            return call_user_func($callback, $user);
         }
 
-        // Default behavior: Store user in session and redirect
         session(['user' => $userData]);
         return redirect('/dashboard');
     }
 
     public function logout(Request $request)
     {
-
-        // Use custom callback if defined
-        $callback = config('laravel-sso-login.logout_callback');
-        if ($callback && is_callable($callback)) {
+        if ($callback = config('laravel-sso-login.logout_callback')) {
             return call_user_func($callback, $request);
         }
 

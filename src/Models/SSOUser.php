@@ -2,13 +2,12 @@
 
 namespace LaravelLogin\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class SSOUser extends Authenticatable
 {
-    protected $table = 'sso_users';
+    protected $table;
 
     protected $fillable = [
         'guuid',
@@ -20,11 +19,17 @@ class SSOUser extends Authenticatable
         'externalId'
     ];
 
-    public function roles()
+    public function __construct(array $attributes = [])
+    {
+        parent::__construct($attributes);
+        $this->table = config('laravel-sso-login.user_table', 'sso_users'); // Default to 'sso_users' if not set
+    }
+
+    public function roles(): HasMany
     {
         return $this->hasMany(RolePermission::class, 'user_id');
     }
-//
+
 //    public function hasPermission($permission): bool
 //    {
 //        return $this->roles()->where('permission', $permission)->exists();
