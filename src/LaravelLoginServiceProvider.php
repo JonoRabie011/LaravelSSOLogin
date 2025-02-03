@@ -109,7 +109,7 @@ class LaravelLoginServiceProvider extends ServiceProvider
         );
 
         $this->app->singleton(LarvelSingleSignOn::class, function () {
-            return new LarvelSingleSignOn::class;
+            return new LarvelSingleSignOn();
         });
     }
 }
