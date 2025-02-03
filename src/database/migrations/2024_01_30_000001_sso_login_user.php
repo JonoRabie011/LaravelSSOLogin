@@ -15,7 +15,6 @@ return new class extends Migration {
             $table->string('token');
             $table->string('refreshToken');
             $table->string('email')->unique();
-            $table->string('externalId')->unique();
             $table->timestamps();
         });
 }
