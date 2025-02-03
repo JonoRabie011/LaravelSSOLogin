@@ -19,6 +19,6 @@ return new class extends Migration {
 
     public function down()
     {
-        Schema::connection(config('database.default'))::dropIfExists('sso_roles_permissions');
+        Schema::connection(config('database.default'))->dropIfExists('sso_roles_permissions');
     }
 };
