@@ -167,3 +167,32 @@ php artisan vendor:publish --tag=views
 This will copy the packages views to the into your app in, Allowing you to customize the views to your liking:
 
 `resources/views/vendor/laravel-sso-login`
+
+
+# Models
+
+The package comes with a User model that you can use to store the SSO user data. You can extend this model to add any additional fields you may need.
+
+```php
+
+namespace App\Models;
+
+use LaravelLogin\Models\SSOUser;
+
+class CustomUser extends SSOUser
+{
+    protected $table = 'users'; // Use existing users table
+
+    // Add custom behavior if needed
+}
+
+```
+
+Once you have created your custom user model, you can update the `config/laravel-sso-login.php` file to use your custom user model:
+
+```php
+// config/laravel-sso-login.php
+return [
+    'user_model' => \App\Models\CustomUser::class,
+];
+```
