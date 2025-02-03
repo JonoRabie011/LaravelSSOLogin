@@ -79,7 +79,7 @@ class AuthController extends Controller
             ]);
         }
 
-        $user->markEmailAsVerified();
+//        $user->markEmailAsVerified();
 
         // Use custom callback if defined
         $callback = config('laravel-sso-login.after_login_callback');
