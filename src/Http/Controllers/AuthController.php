@@ -68,7 +68,7 @@ class AuthController extends Controller
 
         $role = $userData['subscription']["subscriptionPackage"]["associatedRole"];
 
-        $permissions = (array) base64_decode(substr($role['permission'], 5));
+        $permissions = (array) base64_decode(substr($role['permissions'], 5));
 
         foreach ($permissions as $permission) {
             $user->role()->updateOrCreate([
