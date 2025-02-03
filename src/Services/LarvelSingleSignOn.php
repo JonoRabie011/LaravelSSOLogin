@@ -16,6 +16,26 @@ class LarvelSingleSignOn extends HttpService
         parent::__construct();
     }
 
+    /**
+     * Convert a string to camel case
+     * @param $stringToConvert
+     * @return string
+     */
+    private function camel_case($stringToConvert): string
+    {
+        return str_replace(' ', '', ucwords(str_replace('_', ' ', strtolower($stringToConvert))));
+    }
+
+    /**
+     * Convert a string to snake case
+     * @param $stringToConvert
+     * @return string
+     */
+    private function snake_case($stringToConvert): string
+    {
+        return str_replace(' ', '_', strtolower($stringToConvert));
+    }
+
 
     use PermissionService;
 

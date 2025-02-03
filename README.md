@@ -154,8 +154,9 @@ class CustomLogoutController extends Controller {
  "Unauthorized"
 ```
 
+<hr/>
 
-## Views
+# Views
 
 You can publish the views by running the following command:
 
