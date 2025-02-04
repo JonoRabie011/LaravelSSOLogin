@@ -14,8 +14,8 @@
 
     <div class="mt-6 flex gap-6">
         <!-- Feature List -->
-        <div class="flex-1 bg-gray-50 p-6 rounded-lg shadow-sm" id="package-description">
-            test
+        <div class="flex-1 bg-gray-50 p-6 rounded-lg shadow-sm" id="package-description" style="word-wrap: break-word; overflow-wrap: break-word; white-space: normal;">
+            Select a package to see the features
         </div>
 
         <!-- Pricing Options -->
