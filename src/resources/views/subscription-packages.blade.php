@@ -20,18 +20,18 @@
 
         <!-- Pricing Options -->
         <div class="flex-1">
-            <div class="flex justify-end mb-4">
-                <button class="px-4 py-2 text-sm font-semibold bg-gray-200 rounded-l-md">Monthly</button>
-                <button class="px-4 py-2 text-sm font-semibold bg-blue-600 text-white rounded-r-md">Yearly <span class="ml-1 text-xs">Save 30%</span></button>
-            </div>
+<!--            <div class="flex justify-end mb-4">-->
+<!--                <button class="px-4 py-2 text-sm font-semibold bg-gray-200 rounded-l-md">Monthly</button>-->
+<!--                <button class="px-4 py-2 text-sm font-semibold bg-blue-600 text-white rounded-r-md">Yearly <span class="ml-1 text-xs">Save 30%</span></button>-->
+<!--            </div>-->
 
             <div class="space-y-4">
                 @foreach ($pricing as $index => $package)
-                <div class="border p-4 rounded-lg shadow-sm flex justify-between {{ ($package['highlighted']?? false) ? 'bg-blue-100 border-blue-500' : '' }} relative package-item" data-index="{{ $index }}">
+                <div class="border p-4 rounded-lg shadow-sm flex justify-between relative package-item" data-index="{{ $index }}">
                     <div>
-                        <h3 class="text-lg font-bold {{ ($package['highlighted']?? false) ? 'text-blue-600' : '' }}">{{ $package['title'] }}</h3>
+                        <h3 class="text-lg font-bold">{{ $package['title'] }}</h3>
                     </div>
-                    <p class="text-xl font-semibold">{{ $package['currentPricing']['price'] }} <span class="text-sm">/ Per Month</span></p>
+                    <p class="text-xl font-semibold">{{ $package['currentPricing']['price'] }} <span class="text-sm">/ Every {{$package['durationDays']}} Days</span></p>
                 </div>
                 @endforeach
             </div>
