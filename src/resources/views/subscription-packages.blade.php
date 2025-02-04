@@ -14,7 +14,7 @@
 
     <div class="mt-6 flex gap-6">
         <!-- Feature List -->
-        <div class="flex-1 bg-gray-50 p-6 rounded-lg shadow-sm">
+        <div class="flex-1 bg-gray-50 p-6 rounded-lg shadow-sm" id="package-description">
             test
         </div>
 
@@ -26,8 +26,8 @@
             </div>
 
             <div class="space-y-4">
-                @foreach ($pricing as $package)
-                <div class="border p-4 rounded-lg shadow-sm flex justify-between {{ ($package['highlighted']?? false) ? 'bg-blue-100 border-blue-500' : '' }} relative">
+                @foreach ($pricing as $index => $package)
+                <div class="border p-4 rounded-lg shadow-sm flex justify-between {{ ($package['highlighted']?? false) ? 'bg-blue-100 border-blue-500' : '' }} relative package-item" data-index="{{ $index }}">
                     <div>
                         <h3 class="text-lg font-bold {{ ($package['highlighted']?? false) ? 'text-blue-600' : '' }}">{{ $package['title'] }}</h3>
                     </div>
@@ -38,5 +38,25 @@
         </div>
     </div>
 </div>
+
+<script>
+    // JavaScript to handle package selection and highlighting
+    document.querySelectorAll('.package-item').forEach(item => {
+        item.addEventListener('click', function() {
+            // Remove highlighting from all items
+            document.querySelectorAll('.package-item').forEach(i => i.classList.remove('bg-blue-100', 'border-blue-500'));
+
+            // Add highlight to the selected package
+            item.classList.add('bg-blue-100', 'border-blue-500');
+
+            // Get the selected package's index and update the description section
+            const packageIndex = item.getAttribute('data-index');
+            var pricingData = @json($pricing); // Embed the PHP $pricing data into JavaScript
+
+            // Set the description in the feature list
+            document.getElementById('package-description').innerHTML = pricingData[packageIndex].description;
+        });
+    });
+</script>
 </body>
 </html>
