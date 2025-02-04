@@ -13,7 +13,7 @@ class SubscriptionController extends Controller
 
         try {
             $response = $this->getSubscriptionPackages();
-            $pricing = json_decode($response->json(), true);
+            $pricing = $response->json();
             return view('laravel-sso-login::subscription-packages', compact('pricing'));
         } catch (\Exception $e) {
             return view('laravel-sso-login::subscription-packages', compact('pricing'));
