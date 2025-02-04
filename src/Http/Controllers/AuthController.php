@@ -3,6 +3,7 @@
 namespace LaravelLogin\Http\Controllers;
 
 use GuzzleHttp\Exception\RequestException;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
@@ -19,11 +20,23 @@ class AuthController extends Controller
         $this->userModel = config('laravel-sso-login.user_model', SSOUser::class);
     }
 
+    /**
+     * Show the login form
+     *
+     * @return View
+     */
     public function showLoginForm()
     {
         return view('laravel-sso-login::login');
     }
 
+
+    /**
+     * Handle the login request
+     *
+     * @param Request $request
+     * @return mixed
+     */
     public function login(Request $request)
     {
         $credentials = $request->only('email', 'password');
@@ -51,6 +64,10 @@ class AuthController extends Controller
         }
     }
 
+    /**
+     * Function to handle the after login process and after login callback
+     * @return mixed
+     */
     protected function afterLogin($userData)
     {
         $userModel = $this->userModel;

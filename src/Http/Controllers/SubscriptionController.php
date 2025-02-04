@@ -3,6 +3,7 @@
 namespace LaravelLogin\Http\Controllers;
 
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Http;
 
 class SubscriptionController extends Controller
 {
@@ -12,17 +13,20 @@ class SubscriptionController extends Controller
 
         try {
             $response = $this->getSubscriptionPackages();
-            $pricing = json_decode($response->getBody()->getContents(), true);
+            $pricing = json_decode($response->json(), true);
             return view('laravel-sso-login::subscription-packages', compact('pricing'));
         } catch (\Exception $e) {
             return view('laravel-sso-login::subscription-packages', compact('pricing'));
         }
     }
 
-    public function getSubscriptionPackages(): \Psr\Http\Message\ResponseInterface
+    /**
+     * Function to fetch subscription packages from the SSO server
+     */
+    public function getSubscriptionPackages()
     {
-        $client = new \GuzzleHttp\Client();
-        return $client->get(config('laravel-sso-login.sso_url') . "/subscription/packages", [
+        return Http::withToken(config('laravel-sso-login.sso_application_token'))
+            ->get(config('laravel-sso-login.sso_url') . "/subscription/packages", [
             'headers' => [
                 'Authorization' => 'Bearer ' . config('laravel-sso-login.sso_application_token')
             ]
