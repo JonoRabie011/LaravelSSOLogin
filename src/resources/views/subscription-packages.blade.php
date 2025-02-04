@@ -27,9 +27,9 @@
 
             <div class="space-y-4">
                 @foreach ($pricing as $package)
-                <div class="border p-4 rounded-lg shadow-sm flex justify-between {{ $package['highlighted'] ? 'bg-blue-100 border-blue-500' : '' }} relative">
+                <div class="border p-4 rounded-lg shadow-sm flex justify-between {{ ($package['highlighted']?? false) ? 'bg-blue-100 border-blue-500' : '' }} relative">
                     <div>
-                        <h3 class="text-lg font-bold {{ $package['highlighted'] ? 'text-blue-600' : '' }}">{{ $package['title'] }}</h3>
+                        <h3 class="text-lg font-bold {{ ($package['highlighted']?? false) ? 'text-blue-600' : '' }}">{{ $package['title'] }}</h3>
                     </div>
                     <p class="text-xl font-semibold">{{ $package['currentPricing']['price'] }} <span class="text-sm">/ Per Month</span></p>
                 </div>
