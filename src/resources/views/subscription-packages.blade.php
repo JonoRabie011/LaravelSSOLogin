@@ -16,7 +16,6 @@
         <!-- Feature List -->
         <div class="flex-1 bg-gray-50 p-6 rounded-lg shadow-sm">
             test
-<!--            {{ $package['description'] }}-->
         </div>
 
         <!-- Pricing Options -->
@@ -30,13 +29,9 @@
                 @foreach ($pricing as $package)
                 <div class="border p-4 rounded-lg shadow-sm flex justify-between {{ $package['highlighted'] ? 'bg-blue-100 border-blue-500' : '' }} relative">
                     <div>
-                        <h3 class="text-lg font-bold {{ $plan['highlighted'] ? 'text-blue-600' : '' }}">{{ $package['title'] }}</h3>
-<!--                        <p class="text-gray-500 text-sm">{{ $plan['services'] }} Services</p>-->
+                        <h3 class="text-lg font-bold {{ $package['highlighted'] ? 'text-blue-600' : '' }}">{{ $package['title'] }}</h3>
                     </div>
                     <p class="text-xl font-semibold">{{ $package['currentPricing']['price'] }} <span class="text-sm">/ Per Month</span></p>
-<!--                    @if($plan['popular'])-->
-<!--                    <span class="absolute top-2 right-2 bg-green-500 text-white text-xs px-2 py-1 rounded">Popular</span>-->
-<!--                    @endif-->
                 </div>
                 @endforeach
             </div>
